@@ -15,6 +15,8 @@ bouyancy_text_object_name="bouyancy_text"
 
 import csv
 
+bool_offset_compensate=0.1 # compensate for coplanar faces blender bool bug
+
 
 def make_water_volume():
 
@@ -23,13 +25,15 @@ def make_water_volume():
 
 	bpy_helper.find_and_remove_object_by_name(water_object_name)
 
+	
+
 	depth=5
 	width=5
 	length=15
 
 	bpy.ops.mesh.primitive_cube_add(size=1, 
 		enter_editmode=False, 
-		location=(0,0,-depth/2))
+		location=(bool_offset_compensate,bool_offset_compensate,-depth/2))
 
 	water_volume=bpy.context.view_layer.objects.active
 
@@ -55,7 +59,7 @@ def make_water_volume():
 
 	bpy.ops.mesh.primitive_cube_add(size=1, 
 		enter_editmode=False, 
-		location=(0,0,-displace_depth/2))
+		location=(bool_offset_compensate,bool_offset_compensate,-displace_depth/2))
 
 	water_displaced_volume=bpy.context.view_layer.objects.active
 
@@ -130,9 +134,9 @@ def calculate_movement_step(move_arm):
 	elif move_arm<50:
 		move_step=0.001
 	elif move_arm<100:
-		move_step=0.008
+		move_step=0.004
 	else:
-		move_step=0.01
+		move_step=0.008
 
 	return move_step
 		
@@ -151,6 +155,9 @@ def submerge_boat(hull_object,weight,
 			simulate_roll,
 			force_roll_max,
 			csv_output_file):
+
+	hull_object.location.x=bool_offset_compensate*0.5
+	hull_object.location.y=-(bool_offset_compensate*2)
 
 
 	weightQueueSize=5
@@ -446,7 +453,7 @@ def submerge_boat(hull_object,weight,
 
 				csvWriter.writerow(csv_row)
 
-		statusText=("step:%d queue(sum:%f average:%f) dispdiff:%f zstep:%f yRot:%f Yarm:%f xRot:%f Xarm:%f forceroll(%f/%f)"%(
+		statusText=("step:%d queue(sum:%05.0f average:%05.0f) dispdiff:%05.0f zstep:%f yRot:%f Yarm:%f xRot:%f Xarm:%f forceroll(%f/%f)"%(
 						simulation_step,
 						queueSum,
 						queueAverage,
