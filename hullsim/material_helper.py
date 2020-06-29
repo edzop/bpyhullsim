@@ -142,6 +142,23 @@ def get_material_default():
 
 	return make_diffuse_material(material_name,[0.8,0.8,0.8,1])
 
+def get_material_water():
+	material_name="water"
+
+	if material_name in bpy.data.materials:
+		return bpy.data.materials[material_name]
+
+	return make_subsurf_material(material_name,(0,0,0.8,0))
+
+def get_material_water_displaced():
+
+	material_name="water_displaced"
+
+	if material_name in bpy.data.materials:
+		return bpy.data.materials[material_name]
+
+	return make_subsurf_material(material_name,(1,0,0.8,0))
+
 def get_material_bulkhead(): 
 	material_name="bulkhead"
 

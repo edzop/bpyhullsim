@@ -41,7 +41,7 @@ def make_water_volume():
 	water_volume.name=water_object_name
 	water_volume.display_type="WIRE"
 
-	water_material=material_helper.make_subsurf_material("water",(0,0,0.8,0))
+	water_material=material_helper.get_material_water()
 
 	material_helper.assign_material(water_volume,water_material)
 
@@ -67,7 +67,7 @@ def make_water_volume():
 	water_displaced_volume.name=water_displaced_name
 	water_displaced_volume.display_type="WIRE"
 
-	water_displaced_material=material_helper.make_subsurf_material("water",(1,0,0.8,0))
+	water_displaced_material=material_helper.get_material_water_displaced()
 
 	material_helper.assign_material(water_displaced_volume,water_displaced_material)
 
