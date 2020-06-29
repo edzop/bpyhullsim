@@ -18,7 +18,6 @@ import csv
 
 def make_water_volume():
 
-
 	# Water volume
 	water_object_name="water_volume"
 
@@ -167,7 +166,7 @@ def submerge_boat(hull_object,weight,
 		bpy.ops.object.text_add(enter_editmode=False, location=(0, 0, hull_object.dimensions[2]+1))
 		bouyancy_text_object=bpy.context.view_layer.objects.active
 		bouyancy_text_object.name=bouyancy_text_object_name
-		bpy.ops.transform.rotate(value=radians(-90),orient_axis='X')
+		bpy.ops.transform.rotate(value=radians(90),orient_axis='X')
 		bouyancy_text_object.data.extrude = 0.05
 		bouyancy_text_object.data.size=0.6
 
@@ -354,9 +353,9 @@ def submerge_boat(hull_object,weight,
 				pitch_step=calculate_rotate_step(abs_pitch_arm)
 
 				if pitch_arm>arm_solve_threshold:
-					bpy.ops.transform.rotate(value=radians(pitch_step),orient_axis='Y')
-				elif pitch_arm<arm_solve_threshold:
 					bpy.ops.transform.rotate(value=radians(-pitch_step),orient_axis='Y')
+				elif pitch_arm<arm_solve_threshold:
+					bpy.ops.transform.rotate(value=radians(pitch_step),orient_axis='Y')
 
 		# =======================================================
 		# Adjust roll part of simulation
@@ -379,9 +378,9 @@ def submerge_boat(hull_object,weight,
 				roll_step=calculate_rotate_step(abs_roll_arm)
 
 				if roll_arm>arm_solve_threshold:
-					bpy.ops.transform.rotate(value=radians(-roll_step),orient_axis='X')
-				elif pitch_arm<arm_solve_threshold:
 					bpy.ops.transform.rotate(value=radians(roll_step),orient_axis='X')
+				elif pitch_arm<arm_solve_threshold:
+					bpy.ops.transform.rotate(value=radians(-roll_step),orient_axis='X')
 
 		# =======================================================
 		# Adjust water submersion depth (Z position) part of simulation
