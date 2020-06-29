@@ -7,6 +7,11 @@ Designed for use with: [bpyhullgen](https://edzop.github.io/bpyhullgen/)
 For further information please refer to [bpyhullgen Github Wiki](https://github.com/edzop/bpyhullgen/wiki)
 
 
+## User Interface
+bpyhullgen has a sidebar panel tab user interface. It may not be visible if an object is not selected. 
+
+![](images/gui.png)
+
 ## Measure
 ### SelectedFaces
 Measures the selected faces of the current object. The number of selected faces and total surface area of selected faces for current object will be displayed in the status bar.
@@ -30,7 +35,22 @@ The displacement data cache is stored in memory and is not saved with the blende
 
 The text changing between frames uses a frame_change_handler callback function. 
 
-![bpyhullsim sink](images/hull_sink.png)
+Simple cube derived mesh submerged to 2000kg and finding it's equilibrium based on center of bouyancy
+![bpyhullsim sink](images/sink_cube.gif)
+
+More complex mesh 500kg more rotation is needed to reach equilibrium due to asymmetrical shape
+![bpyhullsim sink](images/sink_duck.gif)
+
+Asymmetrical catamaran shaped hull - note the rotation due to uneven floatation on each side.
+![bpyhullsim sink](images/sink_cat.gif)
+
+Submerge to 4000kg displacement
+![bpyhullsim sink](images/sink.gif)
+
+Submerge with weight on front of vessel (affects center of gravity)
+![bpyhullsim sink](images/sink_weight.gif)
+
+
 
 ### RollTest
 The rollover test simulation is used to calcualte the righting moment for the hull when tipped over to a specific angle. The rollover test will roll the hull from 0-180 degrees and record the displacement and righting moment (roll arm about X axis) for each angle. 
@@ -43,12 +63,28 @@ The simulation data will be written to hydro.csv file. And a gnuplot file is pro
 gnuplot -p plot_rollover.gnuplot
 ```
 
-![bpyhullsim rollover](images/rollover_test.png)
-* Amination needed
-
 Select any mesh object and click the RollTest button. 
 
 Animation keyframes are created for each degree of rotation so you can see how the displacement shifts for each angle. 
+
+
+#### Sphere rollover test righting moment
+The sphere should have the same righting moment at any angle... This animation demonstrates the results when tested with bpyhullsim:
+
+![bpyhullsim rollover](images/rolltest_sphere.gif)
+![bpyhullsim rollover](images/rolltest_sphere.png)
+
+
+#### Cube rollover test righting moment
+![bpyhullsim rollover](images/rolltest_cube.gif)
+![bpyhullsim rollover](images/rolltest_cube.png)
+
+#### Cat rollover test righting moment
+![bpyhullsim rollover](images/rolltest_cat.gif)
+![bpyhullsim rollover](images/rolltest_cat.png)
+
+The expected result is curve changing directions about 90 degrees... I need to analyse this test case a bit more to see what's happening.
+
 
 ### HullWeight
 
