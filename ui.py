@@ -155,10 +155,17 @@ class MeasureVolumeOperator (bpy.types.Operator):
 
 	def execute(self, context):
 
-		obj = bpy.context.active_object
-		volume=measure_helper.measure_object_volume(obj)
+		total_volume=0
+		total_weight=0
 
-		self.report({'INFO'}, "Volume: %f"%volume)
+		for obj in bpy.context.selected_objects:
+			if obj.type=="MESH":
+				volume=measure_helper.measure_object_volume(obj)
+				total_volume+=volume
+				aluminum_weight=volume*measure_helper.aluminum_weight
+				total_weight+=aluminum_weight
+
+		self.report({'INFO'}, "Volume: %f m3 (aluminum: %f kg)"%(total_volume,total_weight))
 
 		return {'FINISHED'}
 
