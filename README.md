@@ -35,7 +35,7 @@ The displacement data cache is stored in memory and is not saved with the blende
 
 The text changing between frames uses a frame_change_handler callback function. 
 
-Simple cube derived mesh submerged to 2000kg and finding it's equilibrium based on center of bouyancy
+Simple cube derived mesh submerged to 2000kg and finding it's equilibrium based on center of buoyancy
 ![bpyhullsim sink](images/sink_cube.gif)
 
 More complex mesh 500kg more rotation is needed to reach equilibrium due to asymmetrical shape
@@ -53,7 +53,7 @@ Submerge with weight on front of vessel (affects center of gravity)
 
 
 ### RollTest
-The rollover test simulation is used to calcualte the righting moment for the hull when tipped over to a specific angle. The rollover test will roll the hull from 0-180 degrees and record the displacement and righting moment (roll arm about X axis) for each angle. 
+The rollover test simulation is used to calculate the righting moment for the hull when tipped over to a specific angle. The rollover test will roll the hull from 0-180 degrees and record the displacement and righting moment (roll arm about X axis) for each angle. 
 
 The roll test uses one degree increments and for each increment several simulation substeps may occur until the hull is submerged to an equilibrium (stabilized state).
 
