@@ -19,6 +19,7 @@
 # bpy.ops.script.reload()
 
 
+
 import bpy
 
 
@@ -38,8 +39,6 @@ from bpy.types import (Panel,
 					Operator,
 					PropertyGroup,
 					)
-
-
 
 # ------------------------------------------------------------------------
 #    store properties in the active scene
