@@ -252,7 +252,7 @@ def submerge_boat(hull_object,weight,
 		# Calculate center of mass for displaced water
 		# I tried to calculate mass without applying boolean modifier and it doesn't used the post bool modifier data so we have to do it the slow way
 		# It's much slower to apply modifier each part of the simulation but I can't find any other way to solve this problem. 
-		bpy.ops.object.modifier_apply(apply_as='DATA', modifier=displacement_modifier_name)
+		bpy.ops.object.modifier_apply(modifier=displacement_modifier_name)
 		bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='MEDIAN')
 
 		simulation_step+=1
@@ -354,6 +354,7 @@ def submerge_boat(hull_object,weight,
 				pitch_step=calculate_rotate_step(abs_pitch_arm)
 
 				if pitch_arm>arm_solve_threshold:
+					print(bpy.context.view_layer.objects.active)
 					bpy.ops.transform.rotate(value=radians(pitch_step),orient_axis='Y')
 				elif pitch_arm<arm_solve_threshold:
 					bpy.ops.transform.rotate(value=radians(-pitch_step),orient_axis='Y')
@@ -466,8 +467,8 @@ def submerge_boat(hull_object,weight,
 		bpy.context.workspace.status_text_set(statusText)	
 
 		# Update viewport
-		bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
-		#bpy.context.view_layer.update()
+		#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
+		bpy.context.view_layer.update()
 	
 
 	if csvfile!=None:
