@@ -18,15 +18,12 @@
 
 # bpy.ops.script.reload()
 
+
 import bpy
 
-#from .hullsim import geometry_helper as geometry_helper
-#from .hullgen import boat_curve_2 as boat_curve
-#from .hullgen import material_helper as material_helper
-#from .hullgen import window_helper as window_helper
+
 from .hullsim import measure_helper as measure_helper
 from .hullsim import sim_helper as sim_helper
-#from .hullgen import curve_helper as curve_helper
 
 from bpy.props import (StringProperty,
 					BoolProperty,
@@ -208,7 +205,7 @@ class RollTestOperator (bpy.types.Operator):
 		
 		force_roll_max=180
 			
-		measure_helper.submerge_boat(hull_object,
+		sim_helper.submerge_boat(hull_object,
 			mytool.hull_weight,mytool.simulate_depth,
 			mytool.simulate_pitch,
 			False,
