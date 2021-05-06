@@ -6,9 +6,9 @@ import queue
 from math import radians, degrees
 
 
-from ..hullsim import bpy_helper
-from ..hullsim import material_helper
-from ..hullsim import measure_helper
+from ..bpyutils import bpy_helper
+from ..bpyutils import material_helper
+from ..bpyutils import measure_helper
 
 bouyancy_text_object=None
 bouyancy_text_object_name="bouyancy_text"

@@ -23,7 +23,7 @@
 import bpy
 
 
-from .hullsim import measure_helper as measure_helper
+from .bpyutils import measure_helper as measure_helper
 from .hullsim import sim_helper as sim_helper
 
 from bpy.props import (StringProperty,
