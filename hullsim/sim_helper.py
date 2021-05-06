@@ -15,17 +15,14 @@ bouyancy_text_object_name="bouyancy_text"
 
 import csv
 
-bool_offset_compensate=0.1 # compensate for coplanar faces blender bool bug
-
 
 def make_water_volume():
+
 
 	# Water volume
 	water_object_name="water_volume"
 
 	bpy_helper.find_and_remove_object_by_name(water_object_name)
-
-	
 
 	depth=5
 	width=5
@@ -33,7 +30,7 @@ def make_water_volume():
 
 	bpy.ops.mesh.primitive_cube_add(size=1, 
 		enter_editmode=False, 
-		location=(bool_offset_compensate,bool_offset_compensate,-depth/2))
+		location=(0,0,-depth/2))
 
 	water_volume=bpy.context.view_layer.objects.active
 
@@ -44,7 +41,7 @@ def make_water_volume():
 	water_volume.name=water_object_name
 	water_volume.display_type="WIRE"
 
-	water_material=material_helper.get_material_water()
+	water_material=material_helper.make_subsurf_material("water",(0,0,0.8,0))
 
 	material_helper.assign_material(water_volume,water_material)
 
@@ -59,7 +56,7 @@ def make_water_volume():
 
 	bpy.ops.mesh.primitive_cube_add(size=1, 
 		enter_editmode=False, 
-		location=(bool_offset_compensate,bool_offset_compensate,-displace_depth/2))
+		location=(0,0,-displace_depth/2))
 
 	water_displaced_volume=bpy.context.view_layer.objects.active
 
@@ -70,7 +67,7 @@ def make_water_volume():
 	water_displaced_volume.name=water_displaced_name
 	water_displaced_volume.display_type="WIRE"
 
-	water_displaced_material=material_helper.get_material_water_displaced()
+	water_displaced_material=material_helper.make_subsurf_material("water",(1,0,0.8,0))
 
 	material_helper.assign_material(water_displaced_volume,water_displaced_material)
 
@@ -134,9 +131,9 @@ def calculate_movement_step(move_arm):
 	elif move_arm<50:
 		move_step=0.001
 	elif move_arm<100:
-		move_step=0.004
-	else:
 		move_step=0.008
+	else:
+		move_step=0.01
 
 	return move_step
 		
@@ -156,9 +153,6 @@ def submerge_boat(hull_object,weight,
 			force_roll_max,
 			csv_output_file):
 
-	hull_object.location.x=bool_offset_compensate*0.5
-	hull_object.location.y=-(bool_offset_compensate*2)
-
 
 	weightQueueSize=5
 	weightQueue = queue.Queue(weightQueueSize)
@@ -173,8 +167,7 @@ def submerge_boat(hull_object,weight,
 		bpy.ops.object.text_add(enter_editmode=False, location=(0, 0, hull_object.dimensions[2]+1))
 		bouyancy_text_object=bpy.context.view_layer.objects.active
 		bouyancy_text_object.name=bouyancy_text_object_name
-		bouyancy_text_object.rotation_euler=[radians(90),0,0]
-		#bpy.ops.transform.rotate(value=radians(90),orient_axis='X')
+		bpy.ops.transform.rotate(value=radians(-90),orient_axis='X')
 		bouyancy_text_object.data.extrude = 0.05
 		bouyancy_text_object.data.size=0.6
 
@@ -361,9 +354,10 @@ def submerge_boat(hull_object,weight,
 				pitch_step=calculate_rotate_step(abs_pitch_arm)
 
 				if pitch_arm>arm_solve_threshold:
-					bpy.ops.transform.rotate(value=radians(-pitch_step),orient_axis='Y')
-				elif pitch_arm<arm_solve_threshold:
+					print(bpy.context.view_layer.objects.active)
 					bpy.ops.transform.rotate(value=radians(pitch_step),orient_axis='Y')
+				elif pitch_arm<arm_solve_threshold:
+					bpy.ops.transform.rotate(value=radians(-pitch_step),orient_axis='Y')
 
 		# =======================================================
 		# Adjust roll part of simulation
@@ -386,9 +380,9 @@ def submerge_boat(hull_object,weight,
 				roll_step=calculate_rotate_step(abs_roll_arm)
 
 				if roll_arm>arm_solve_threshold:
-					bpy.ops.transform.rotate(value=radians(roll_step),orient_axis='X')
-				elif pitch_arm<arm_solve_threshold:
 					bpy.ops.transform.rotate(value=radians(-roll_step),orient_axis='X')
+				elif pitch_arm<arm_solve_threshold:
+					bpy.ops.transform.rotate(value=radians(roll_step),orient_axis='X')
 
 		# =======================================================
 		# Adjust water submersion depth (Z position) part of simulation
@@ -454,7 +448,7 @@ def submerge_boat(hull_object,weight,
 
 				csvWriter.writerow(csv_row)
 
-		statusText=("step:%d queue(sum:%05.0f average:%05.0f) dispdiff:%05.0f zstep:%f yRot:%f Yarm:%f xRot:%f Xarm:%f forceroll(%f/%f)"%(
+		statusText=("step:%d queue(sum:%f average:%f) dispdiff:%f zstep:%f yRot:%f Yarm:%f xRot:%f Xarm:%f forceroll(%f/%f)"%(
 						simulation_step,
 						queueSum,
 						queueAverage,
@@ -473,8 +467,8 @@ def submerge_boat(hull_object,weight,
 		bpy.context.workspace.status_text_set(statusText)	
 
 		# Update viewport
-		bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
-		#bpy.context.view_layer.update()
+		#bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)
+		bpy.context.view_layer.update()
 	
 
 	if csvfile!=None:

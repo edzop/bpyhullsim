@@ -33,6 +33,13 @@ CG_object_name="CG"
 #from ..hullsim import bpy_helper
 #from ..hullsim import material_helper
 
+# hard coded to 5083 aluminum for now
+# expressed as KG per m3
+aluminum_weight=2653
+
+material_weight=aluminum_weight
+
+
 
 # =======================================================================================
 # This bmesh_copy_from_object function was borrowed from the object_print3d_utils addon.
@@ -110,9 +117,7 @@ def calculate_cg(influence_objects):
 		# object surface area in m2
 		object_face_area=face_data[1]
 
-		# hard coded to 5083 aluminum for now
-		# expressed as KG per m3
-		material_weight=2653
+
 
 		# hdpe 970 KG per m3
 
@@ -165,6 +170,10 @@ def measure_object_volume(obj):
 	bm = bmesh_copy_from_object(obj, apply_modifiers=True)
 	volume = bm.calc_volume()
 	bm.free()
+
+	aluminum_weight=volume*material_weight
+
+	print("Volume: %f (Aluminum: %f)"%(volume,aluminum_weight))
 
 	return volume
 
