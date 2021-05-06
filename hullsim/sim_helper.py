@@ -426,8 +426,6 @@ def submerge_boat(hull_object,weight,
 				# only log once it's reached equilibrium if doing roll test
 				#if force_roll_max==0 or (simulate_depth and displacement_diff<weight_solve_threshold):
 
-				print("Log CSV")
-
 				csv_row = []
 
 				csv_row.append(simulation_step) #1
