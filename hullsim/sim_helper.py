@@ -173,7 +173,8 @@ def submerge_boat(hull_object,weight,
 		bpy.ops.object.text_add(enter_editmode=False, location=(0, 0, hull_object.dimensions[2]+1))
 		bouyancy_text_object=bpy.context.view_layer.objects.active
 		bouyancy_text_object.name=bouyancy_text_object_name
-		bpy.ops.transform.rotate(value=radians(90),orient_axis='X')
+		bouyancy_text_object.rotation_euler=[radians(90),0,0]
+		#bpy.ops.transform.rotate(value=radians(90),orient_axis='X')
 		bouyancy_text_object.data.extrude = 0.05
 		bouyancy_text_object.data.size=0.6
 
@@ -258,7 +259,7 @@ def submerge_boat(hull_object,weight,
 		# Calculate center of mass for displaced water
 		# I tried to calculate mass without applying boolean modifier and it doesn't used the post bool modifier data so we have to do it the slow way
 		# It's much slower to apply modifier each part of the simulation but I can't find any other way to solve this problem. 
-		bpy.ops.object.modifier_apply(apply_as='DATA', modifier=displacement_modifier_name)
+		bpy.ops.object.modifier_apply(modifier=displacement_modifier_name)
 		bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='MEDIAN')
 
 		simulation_step+=1

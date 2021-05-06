@@ -101,7 +101,7 @@ def calculate_cg(influence_objects):
 
 		bpy.ops.object.select_all(action='DESELECT')
 		bpy_helper.select_object(obj,True)
-		bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='MEDIAN')
+		#bpy.ops.object.origin_set(type='ORIGIN_CENTER_OF_MASS', center='MEDIAN')
 
 		object_volume=measure_object_volume(obj)
 
