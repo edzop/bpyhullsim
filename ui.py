@@ -199,7 +199,7 @@ class RollTestOperator (bpy.types.Operator):
 		csv_file=None
 
 		if mytool.output_csv==True:
-			csv_file="hydro.csv"
+			csv_file="bpyhullgen_hydro_rollover.csv"
 
 		
 		force_roll_max=180
@@ -234,7 +234,7 @@ class SubmergeOperator (bpy.types.Operator):
 		csv_file=None
 
 		if mytool.output_csv==True:
-			csv_file="bpyhullgen_hydro.csv"
+			csv_file="bpyhullgen_hydro_submerge.csv"
 		
 		sim_helper.submerge_boat(hull_object,
 			mytool.hull_weight,mytool.simulate_depth,

@@ -182,7 +182,7 @@ def submerge_boat(hull_object,weight,
 
 		csv_row = []
 
-		csv_row.append("frame")
+		csv_row.append("step")
 
 		csv_row.append("displacement_diff")
 		csv_row.append("displaced_weight")
@@ -430,19 +430,19 @@ def submerge_boat(hull_object,weight,
 
 				csv_row.append(simulation_step) #1
 
-				csv_row.append("%f"%displacement_diff) #2
-				csv_row.append("%f"%displaced_weight) #3
-				csv_row.append("%f"%z_step) #4
+				csv_row.append("%0.02f"%displacement_diff) #2
+				csv_row.append("%0.02f"%displaced_weight) #3
+				csv_row.append("%0.02f"%z_step) #4
 
-				csv_row.append("%f"%hull_object.location.z) #5
+				csv_row.append("%0.02f"%hull_object.location.z) #5
 
-				csv_row.append("%f"%degrees(hull_object.rotation_euler.y))  #6 pitch
-				csv_row.append("%f"%pitch_arm) #7
-				csv_row.append("%f"%pitch_step) #8
+				csv_row.append("%0.02f"%degrees(hull_object.rotation_euler.y))  #6 pitch
+				csv_row.append("%0.02f"%pitch_arm) #7
+				csv_row.append("%0.02f"%pitch_step) #8
 
-				csv_row.append("%f"%degrees(hull_object.rotation_euler.x)) #9 roll
-				csv_row.append("%f"%roll_arm) #10
-				csv_row.append("%f"%roll_step) #11
+				csv_row.append("%0.02f"%degrees(hull_object.rotation_euler.x)) #9 roll
+				csv_row.append("%0.02f"%roll_arm) #10
+				csv_row.append("%0.02f"%roll_step) #11
 
 				csvWriter.writerow(csv_row)
 
