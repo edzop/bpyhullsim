@@ -61,7 +61,6 @@ classes = (
     ui.MeasureAreaAllOperator,
     ui.SubmergeOperator,
     ui.RollTestOperator,
-    sim_helper.bpysim_Operator
 )
 
 from .hullsim import sim_helper as sim_helper
@@ -72,11 +71,13 @@ def register():
 
     bpy.types.Scene.hullsim_Props = PointerProperty( type = ui.hullsim_Properties )
 
-    #bpy.utils.register_class(sim_helper.bpysim_Operator)
+    sim_helper.register_text_update_callback()
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+
+    sim_helper.unregister_text_update_callback()
 
     #bpy.utils.unregister_class(bpysim_Operator)
 

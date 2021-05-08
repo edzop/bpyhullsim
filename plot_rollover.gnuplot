@@ -1,10 +1,18 @@
 set datafile separator ','
-dataFileName="bpyhullgen_hydro_rollover.csv"
+dataFileName="bpyhullsim_hydro_rollover.csv"
 
- set title "bpyhullgen roll analysis"
+stats dataFileName using 3 nooutput
 
+max_weight=STATS_max
 
-plot dataFileName using 9:($3) with lines title 'Displacement (KG)' lc rgb 'blue', \
-        dataFileName using 9:($9*1) with lines title "Pitch (X)" lc rgb '#228B22', \
-        dataFileName using 9:($7*1000) with lines title "Pitch Arm (mm)" lc rgb '#00FF00', \
-        dataFileName using 9:($10*1000) with lines title "Roll Arm (mm)" lc rgb '#FF1493'
+title_text=sprintf('bpyhullgen roll analysis - %0.0f kg',max_weight)
+
+set title title_text
+
+set xlabel "Heel Angle"
+set ylabel "Righting Force"
+#set xrange [0:180]
+
+plot dataFileName using 9:($6) with lines title "Pitch Angle (Y)" lc rgb 'green', \
+     dataFileName using 9:($10*100) with lines title "Pitch Arm (mm)" lc rgb 'dark-green', \
+     dataFileName using 9:($7*100) with lines title "Roll Arm (mm)" lc rgb 'red'
