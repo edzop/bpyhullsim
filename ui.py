@@ -46,6 +46,7 @@ from bpy.types import (Panel,
 
 class hullsim_Properties (PropertyGroup):
 
+	registered=False
 
 	cleanup_options=[ 
 				('auto', 'Auto', ""),
@@ -61,6 +62,15 @@ class hullsim_Properties (PropertyGroup):
 		name="cleanup",
 		default="auto"
 	)
+
+	limitsteps : IntProperty(
+		name = "Limit Steps",
+		description = "Limit the simulation to number of steps",
+		default = 6000,
+		min = 1,
+		max = 50000
+		)
+
 
 	hull_weight : FloatProperty(
 		name = "HullWeight",
@@ -82,25 +92,25 @@ class hullsim_Properties (PropertyGroup):
 		name="Output CSV",
 		description="Output hydro.csv file containing simulation data",
 		default = True
-    )
+	)
 
 	simulate_depth : BoolProperty(
 		name="Sim Depth",
 		description="Simulate Depth (sinking)",
 		default = True
-    )
+	)
 
 	simulate_pitch : BoolProperty(
 		name="Sim Pitch",
 		description="Simulate Pitch (Y Axis)",
 		default = True
-    )
+	)
 
 	simulate_roll : BoolProperty(
 		name="Sim Roll",
 		description="Simulate Roll (X Axis)",
 		default = True
-    )
+	)
 
 
 
@@ -112,16 +122,18 @@ class hullsim_Properties (PropertyGroup):
 # ------------------------------------------------------------------------
 
 class MeasureAreaSelectedOperator (bpy.types.Operator):
-	"""Measure the area of all faces in selected object"""
-	bl_idname = "wm.measure_area_all"
-	bl_label = "AllFaces"
-
+	
+	"""Measure the area of selected faces in selected object"""
+	bl_idname = "wm.measure_area_selected"
+	bl_label = "SelectedFaces"
+	
 	def execute(self, context):
 
 		obj = bpy.context.active_object
-		face_data=measure_helper.measure_selected_faces_area(obj,True)
+		face_area=measure_helper.measure_face_area(obj,SelectAll=False)
+		face_count=measure_helper.measure_face_count(obj,SelectAll=False)
 
-		self.report({'INFO'}, "faces %d: area %f"%(face_data[0],face_data[1]))
+		self.report({'INFO'}, "faces %d: area %f"%(face_count,face_area))
 
 		return {'FINISHED'}
 
@@ -130,16 +142,17 @@ class MeasureAreaSelectedOperator (bpy.types.Operator):
 # ------------------------------------------------------------------------
 
 class MeasureAreaAllOperator (bpy.types.Operator):
-	"""Measure the area of selected faces in selected object"""
-	bl_idname = "wm.measure_area_selected"
-	bl_label = "SelectedFaces"
-
+	"""Measure the area of all faces in selected object"""
+	bl_idname = "wm.measure_area_all"
+	bl_label = "AllFaces"
+	
 	def execute(self, context):
 
 		obj = bpy.context.active_object
-		face_data=measure_helper.measure_selected_faces_area(obj,False)
+		face_area=measure_helper.measure_face_area(obj,SelectAll=True)
+		face_count=measure_helper.measure_face_count(obj,SelectAll=True)
 
-		self.report({'INFO'}, "faces %d: area %f"%(face_data[0],face_data[1]))
+		self.report({'INFO'}, "faces %d: area %f"%(face_count,face_area))
 
 		return {'FINISHED'}
 
@@ -199,17 +212,19 @@ class RollTestOperator (bpy.types.Operator):
 		csv_file=None
 
 		if mytool.output_csv==True:
-			csv_file="bpyhullgen_hydro_rollover.csv"
+			csv_file="bpyhullsim_hydro_rollover.csv"
 
 		
 		force_roll_max=180
 			
-		sim_helper.submerge_boat(hull_object,
+		the_sim_helper=sim_helper.SimSession(hull_object,
 			mytool.hull_weight,mytool.simulate_depth,
 			mytool.simulate_pitch,
 			False,
 			force_roll_max,
 			csv_file)
+
+		the_sim_helper.run_simulation(mytool.limitsteps)
 
 		return {'FINISHED'}
 
@@ -234,20 +249,23 @@ class SubmergeOperator (bpy.types.Operator):
 		csv_file=None
 
 		if mytool.output_csv==True:
-			csv_file="bpyhullgen_hydro_submerge.csv"
-		
-		sim_helper.submerge_boat(hull_object,
+			csv_file="bpyhullsim_hydro_submerge.csv"
+
+		the_sim_helper=sim_helper.SimSession(hull_object,
 			mytool.hull_weight,mytool.simulate_depth,
 			mytool.simulate_pitch,
 			mytool.simulate_roll,
 			0,
 			csv_file)
 
+		the_sim_helper.run_simulation(mytool.limitsteps)
+
 		return {'FINISHED'}
 
 # ------------------------------------------------------------------------
 #    my tool in objectmode
 # ------------------------------------------------------------------------
+
 
 class OBJECT_PT_bpyhullsim_panel (Panel):
 
@@ -262,6 +280,8 @@ class OBJECT_PT_bpyhullsim_panel (Panel):
 		return context.object is not None
 
 	def draw(self, context):
+
+		
 		layout = self.layout
 		scene = context.scene
 		mytool = scene.hullsim_Props
@@ -275,8 +295,6 @@ class OBJECT_PT_bpyhullsim_panel (Panel):
 		rowsub.operator( "wm.measure_volume")
 		rowsub.operator( "wm.calculate_cg")
 		
-		
-		
 		row = layout.row()
 		row.label(text="Hydrostatics:")
 		rowsub = layout.row(align=True)
@@ -287,3 +305,4 @@ class OBJECT_PT_bpyhullsim_panel (Panel):
 		layout.prop( mytool, "simulate_depth")
 		rowsub.operator( "wm.submerge")
 		rowsub.operator( "wm.rolltest")
+		layout.prop( mytool, "limitsteps")
