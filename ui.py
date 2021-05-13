@@ -48,20 +48,16 @@ class hullsim_Properties (PropertyGroup):
 
 	registered=False
 
-	cleanup_options=[ 
-				('auto', 'Auto', ""),
-				('front', 'Front', ""),
-				('left', "Left", ""),
-				('up', "Up", ""),
-				('down', "Down", "")
+	material_type: EnumProperty(
+		name="Material",
+		description="Material Type used for calculating weight of volume",
+		items=[ ("2699", "Aluminum", ""),
+				("7850", "Steel", ""),
+				("960", "HDPE", ""),
+				("50", "Foam", "Polystyrene"),
+				("1000", "Water", "")
 			   ]
-
-	cleanup_choice: EnumProperty(
-		items=cleanup_options,
-		description="Cleanup....",
-		name="cleanup",
-		default="auto"
-	)
+		)
 
 	limitsteps : IntProperty(
 		name = "Limit Steps",
@@ -167,14 +163,20 @@ class MeasureVolumeOperator (bpy.types.Operator):
 		total_volume=0
 		total_weight=0
 
+		mytool = context.scene.hullsim_Props
+		material_weight=float(mytool.material_type)
+
 		for obj in bpy.context.selected_objects:
 			if obj.type=="MESH":
 				volume=measure_helper.measure_object_volume(obj)
-				total_volume+=volume
-				aluminum_weight=volume*measure_helper.aluminum_weight
-				total_weight+=aluminum_weight
+				
+				print("Material weight per m3: %s"%material_weight)
 
-		self.report({'INFO'}, "Volume: %f m3 (aluminum: %f kg)"%(total_volume,total_weight))
+				total_volume+=volume
+				this_weight=volume*material_weight
+				total_weight+=this_weight
+
+		self.report({'INFO'}, "Volume: %f m3 x %f = %f kg"%(total_volume,material_weight,total_weight))
 
 		return {'FINISHED'}
 
@@ -220,11 +222,13 @@ class RollTestOperator (bpy.types.Operator):
 		the_sim_helper=sim_helper.SimSession(hull_object,
 			mytool.hull_weight,mytool.simulate_depth,
 			mytool.simulate_pitch,
-			False,
+			True,
 			force_roll_max,
 			csv_file)
 
 		the_sim_helper.run_simulation(mytool.limitsteps)
+
+		self.report({'INFO'},the_sim_helper.status_message)
 
 		return {'FINISHED'}
 
@@ -260,6 +264,8 @@ class SubmergeOperator (bpy.types.Operator):
 
 		the_sim_helper.run_simulation(mytool.limitsteps)
 
+		self.report({'INFO'},the_sim_helper.status_message)
+
 		return {'FINISHED'}
 
 # ------------------------------------------------------------------------
@@ -292,7 +298,9 @@ class OBJECT_PT_bpyhullsim_panel (Panel):
 		rowsub.operator( "wm.measure_area_selected")
 		rowsub.operator( "wm.measure_area_all")
 		rowsub = layout.row(align=True)
+		layout.prop( mytool, "material_type") 
 		rowsub.operator( "wm.measure_volume")
+		rowsub = layout.row(align=True)
 		rowsub.operator( "wm.calculate_cg")
 		
 		row = layout.row()
