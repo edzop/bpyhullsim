@@ -26,7 +26,7 @@ Calculates the center of mass for multiple objects. A new empty named "CG" will 
 
 A basic simulation loop can be used to calculate waterline and other hydrostatic parameters for a defined hull. 
 
-An sphere shaped empty object named ```CG``` is created and the selected object is parented to the ```CG``` empty so any transformations and keyframes do not affect the original object. To delete the simulation data, just delete the ```CG``` empty object. By default the center of gravity is calculated according to the center of mass, but can be adjusted by moving the desired object in relation to the ```CG``` object before running the simulation - it will behave differently because the center of gravity is offset. 
+An sphere shaped empty object named ```CG``` is created and the selected object is parented to the ```CG``` empty so any transformations and keyframes do not affect the original object. The simulation is non destructive - To delete the simulation data and reset objects to original position, just delete the ```CG``` empty object. By default the center of gravity is calculated according to the center of mass, but can be adjusted by moving the desired object in relation to the ```CG``` object before running the simulation - it will behave differently because the center of gravity is offset. 
 
 A queue (history) of displacement differentials is stored internally to detect velocity. 
 
@@ -44,7 +44,8 @@ It's highly recommend to launch the simulation from the command line console so 
 
 I experimented with the command `bpy.ops.wm.redraw_timer(type='DRAW_WIN_SWAP', iterations=1)` in the file `sim_helper.py` - it's commented out for now. The simulation runs faster without updates but you can disable it to get UI updates to watch the simulation in real time but warnings are displayed by blender sometimes complaining the UI is behind. I also tried `bpy.context.view_layer.update()` to get the gui to update while simulation is running but that didn't seem to do anything. 
 
-I've spent quite a bit of time trying to figure out how to abort the simulation with ESC key or something like that and posted several questions on forums but to no avail. Most of the solutions are to use a modal loop with a fixed interval timer for the execution loop which severely limits the simulation step rate. 
+I've spent quite a bit of time trying to figure out how to abort the simulation with ESC key or something like that and posted several questions on forums [here](https://blenderartists.org/t/abort-ui-python-simulation/1257067) and [here](https://blender.stackexchange.com/questions/197134/simulation-in-blender-python-respond-to-keypress-without-timer) but have not been able to solve this. 
+
 
 I'm trying to use `bmesh` as much as possible instead of `bpy.ops` and it's quite fast. 
 
