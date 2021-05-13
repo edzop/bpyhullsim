@@ -1,8 +1,16 @@
 # bpyhullsim
 
-blender based buoyancy simulator written in python
+Hull buoyancy simulator written in python to be used as a [blender](https://www.blender.org/) extension. 
+
+It accepts a watertight mesh hull object as the input and will submerge the object into a simulated body of water to determine water level based on a specific weight and also balance the roll and pitch of the hull until stabilized as an equilibrium to see how the object will rest in the water.
+
+Center of gravity and weight can be adjusted for different loading scenarios. 
+
+You can perform hull stability analysis using RollTest feature which can simulate a hull rollover to determine righting moment for a range of roll angles. 
 
 Designed for use with: [bpyhullgen](https://edzop.github.io/bpyhullgen/)
+
+Requires blender 2.92 or later. 
 
 For further information please refer to [bpyhullgen Github Wiki](https://github.com/edzop/bpyhullgen/wiki)
 
