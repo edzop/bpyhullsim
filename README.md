@@ -8,6 +8,8 @@ Center of gravity and weight can be adjusted for different loading scenarios.
 
 You can perform hull stability analysis using RollTest feature which can simulate a hull rollover to determine righting moment for a range of roll angles. 
 
+To summarize it creates a cube shaped body of water and slowly submerses the hull into the body of water while calculating the intersection of the hull and the water for each step of the simulation. The boolean intersection of the hull and the water determine the displaced water. The weight and center of gravity is calculated for this displaced water and compared with the center of gravity location on the hull object to determine the righting arm. The hull is submersed until the desired displacement weight is achieved. 
+
 Designed for use with: [bpyhullgen](https://edzop.github.io/bpyhullgen/)
 
 Requires blender 2.92 or later. 
