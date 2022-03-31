@@ -23,7 +23,7 @@ bl_info = {
     "description": "Hydrostatics simulator for blender",
     "author": "Ed Kraus",
     "version": (0, 0, 2),
-    "blender": (2, 82, 0),
+    "blender": (3, 1, 0),
     "location": "3D View > Tools",
     "warning": "", # used for warning icon and text in addons panel
     "wiki_url": "https://edzop.github.io/bpyhullsim/",
@@ -61,6 +61,7 @@ classes = (
     ui.MeasureAreaAllOperator,
     ui.SubmergeOperator,
     ui.RollTestOperator,
+    ui.SetupFluidOperator
 )
 
 from .hullsim import sim_helper as sim_helper

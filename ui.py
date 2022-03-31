@@ -25,6 +25,7 @@ import bpy
 
 from .bpyutils import measure_helper as measure_helper
 from .hullsim import sim_helper as sim_helper
+from .hullsim import fluid_setup
 
 from bpy.props import (StringProperty,
 					BoolProperty,
@@ -181,6 +182,26 @@ class MeasureVolumeOperator (bpy.types.Operator):
 		return {'FINISHED'}
 
 
+
+class SetupFluidOperator(bpy.types.Operator):
+	"""Setup fluid simulation"""
+	bl_idname = "wm.setup_fluid"
+	bl_label = "Setup Fluid"
+
+	def execute(self, context):
+
+		influence_object_list=[]
+
+		for obj in bpy.context.selected_objects:
+			if obj.type=="MESH":
+				influence_object_list.append(obj)
+		
+		fluid_setup.setup_fluid()
+
+
+		return {'FINISHED'}
+
+
 class CalculateCGOperator (bpy.types.Operator):
 	"""Calculate CG of selected objects"""
 	bl_idname = "wm.calculate_cg"
@@ -303,6 +324,11 @@ class OBJECT_PT_bpyhullsim_panel (Panel):
 		rowsub = layout.row(align=True)
 		rowsub.operator( "wm.calculate_cg")
 		
+		rowsub = layout.row(align=True)
+		rowsub.operator("wm.setup_fluid")
+		
+
+
 		row = layout.row()
 		row.label(text="Hydrostatics:")
 		rowsub = layout.row(align=True)
